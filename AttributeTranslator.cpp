@@ -10,19 +10,9 @@
 #include <iostream>
 #include <vector>
 
-
-/*
- ● MUST be able to retrieve all related attribute-value pairs for a specified source attribute- value pair in better than O(N) time where N is the number of source attribute-value pairs stored in the object. So for example, O(log2 N) would be acceptable (although you can do much better). For big-O analysis purposes, you may assume that there's a constant that all attribute lengths are less than. You may also assume that the number of compatible pairs any attribute-value pair translates to is bounded by a constant (e.g., < 10 pairs).
- ● MUST use your RadixTree class to map source attribute-value information to compatible attribute-values (for full credit)
- ● MUST NOT use the STL map, unordered_map, multimap, or unordered_multimap types
- ● MUST NOT add any new public member functions or variables
- ● MAY use the STL list, vector, set, and unordered_set classes
-
- */
 AttributeTranslator::AttributeTranslator(){}
 AttributeTranslator::~AttributeTranslator(){}
 
-//TODO: remove total at some point
 bool AttributeTranslator::Load(std::string filename){
     std::string line;
     std::ifstream file(filename);

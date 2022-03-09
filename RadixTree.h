@@ -5,9 +5,8 @@
 #include <vector>
 #include <map>
 #include "provided.h"
-#include <iostream>
 /*
- 
+
  ● MUST be a class template, implemented fully in RadixTree.h.
  ● MUST hold a number of nodes that is proportional to the number of unique key-value
  pairs inserted in the Radix Tree, NOT a number of nodes that is proportional to the
@@ -33,20 +32,18 @@
 template<typename ValueType>
 class RadixTree{
 public:
-    RadixTree():m_size(0){}
+    RadixTree(){}
     ~RadixTree(){}
     void insert(std::string key, const ValueType& value){
         m_map[key] = value;
     }
     ValueType* search(std::string key) const{
-        //typename std::map<std::string, ValueType>::const_iterator it = m_map.find(key);
         auto it = m_map.find(key);
         if(it == m_map.end()) return nullptr;
         return const_cast<ValueType*>(&(it->second));
     }
     std::map<std::string, ValueType> m_map;
 private:
-    int m_size;
 //    struct Node{
 //        std::string key;
 //        ValueType& value;
