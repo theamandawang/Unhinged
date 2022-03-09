@@ -23,8 +23,7 @@ std::vector<EmailCount> MatchMaker::IdentifyRankedMatches(std::string email, int
     std::vector<AttValPair> compatible;
     std::vector<AttValPair> totalCompatibleValues;
     std::vector<std::string> matching;
-    std::vector<std::string> uniqueEmails;
-    std::unordered_map<std::string, EmailCount> matchingEmailsWithCompatibility;
+    std::unordered_map<std::string, EmailCount> m_mapEmailsWithCompatibility;
     for(int i = 0; i < p->GetNumAttValPairs(); i++){
         AttValPair temp("", "");
         if(p->GetAttVal(i, temp)){
@@ -46,37 +45,30 @@ std::vector<EmailCount> MatchMaker::IdentifyRankedMatches(std::string email, int
         matching = m_data->FindMatchingMembers(totalCompatibleValues[i]);
         //for each member, add their email into a map mapping their email to an attribute
         for(int j = 0; j< matching.size(); j++){
-            if(matchingEmailsWithCompatibility.find(matching[j]) == matchingEmailsWithCompatibility.end()){
+            if(m_mapEmailsWithCompatibility.find(matching[j]) == m_mapEmailsWithCompatibility.end()){
                 if(matching[j] != email){
                     EmailCount e(matching[j], 1);
                     std::pair<std::string, EmailCount> myPair(matching[j], e);
-                    matchingEmailsWithCompatibility.insert(myPair);
-                    uniqueEmails.push_back(matching[j]);
+                    m_mapEmailsWithCompatibility.insert(myPair);
                 }
             }
             else{
-                matchingEmailsWithCompatibility.at(matching[j]).count += 1;
+                m_mapEmailsWithCompatibility.at(matching[j]).count += 1;
             }
         }
     }
-    for(int i = 0; i < matchingEmailsWithCompatibility.size(); i++){
-        v.push_back(matchingEmailsWithCompatibility.at(uniqueEmails[i]));
+    for(auto key: m_mapEmailsWithCompatibility){
+        if(key.first != email && key.second.count >= threshold){ //skip original email
+            v.push_back(key.second);
+        }
     }
     std::sort(v.begin(), v.end(), byEmail);
-    auto it = v.begin();
-    while(it != v.end()){
-        if((*it).count < threshold) break;
-        it++;
-    }
-    if(it==v.end()) return v;
-    std::vector<EmailCount> vThresh(v.begin(), it);
-    
     
     /* code you want to measure */
     std::cout << "Elapsed(ms)=" << since(start).count() << std::endl;
 
     
-    return vThresh;
+    return v;
 }
 
 

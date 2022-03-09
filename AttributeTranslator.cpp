@@ -9,7 +9,6 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
-
 AttributeTranslator::AttributeTranslator(){}
 AttributeTranslator::~AttributeTranslator(){}
 
