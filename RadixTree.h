@@ -4,10 +4,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <algorithm>
 #include "provided.h"
-
-
 
 //TODO: MUST REPLACE substr with some kind of string iteration.
 template<typename ValueType>
@@ -26,15 +23,17 @@ public:
     }
     void insert(std::string key, const ValueType& value){
         Node * current = head;
-        int ogSize = key.size();
-        for(int i = 0; i < ogSize; i++){
+        int counter = 0;
+        for(int i = 0; i < key.size(); i++){
             //need to traverse what is in my tree so far
-            char c = key.at(0);
+            //this means that the value is already in the tree!
+            if(counter == key.size()) return;
+            char c = key.at(counter);
             int ind = c-0;
 //            std::cout << c << std::endl;
 //            std::cout << key <<  " : key" << std::endl;
             if(current->children[ind] == nullptr){
-                current->children[ind] = new Node(key.substr(i), true);
+                current->children[ind] = new Node(key.substr(counter), true);
                 current->children[ind]->value = value;
                 needsDeleted.push_back(current->children[ind]);
                 return;
@@ -46,16 +45,16 @@ public:
                 std::string currString = current->str;
                 int j;
                 for(j = 0; j<currString.size(); j++){
-                    if(key.size() == (j)) break;
+                    if(key.size() == (counter+j)) break;
 //                    std::cout << "key at j " << key.at(j) << std::endl;
-
-                    if(currString.at(j) != key.at(j)){
+                    if(currString.at(j) != key.at(j+counter)){
                         j--;
                         break;
                     }
                 }
+                counter += j;
                 //all of key is contained in currString
-                if(j == key.size() && j!=currString.size()){
+                if(counter == key.size() && j!=currString.size()){
                     Node * temp = new Node(key, true);
                     temp->value = value;
                     needsDeleted.push_back(temp);
@@ -68,41 +67,36 @@ public:
                 }
                 //all of currString is contained in key
                 
-                if(j == currString.size() && currString.size() < key.size() && current->children[key.at(j) - 0] == nullptr){
-                    int childInd = key.at(j) - 0;
-                    Node * temp = new Node(key.substr(currString.size()), true);
+                else if(j == currString.size() && currString.size() < key.size() && counter < key.size() &&  current->children[key.at(counter) - 0] == nullptr){
+                    int childInd = key.at(counter) - 0;
+                    Node * temp = new Node(key.substr(counter), true);
                     temp->value = value;
                     needsDeleted.push_back(temp);
                     current->children[childInd] = temp;
                     return;
                 }
-                if(j < currString.size() && current->children[key.at(j)-0] == nullptr){
+                else if(j < currString.size()){
 //                    std::cout << "key: " << key << std::endl;
-                    Node * temp = new Node(key.substr(j+1), true);
+                    Node * temp = new Node(key.substr(counter+1), true);
                     temp->value = value;
                     needsDeleted.push_back(temp);
                     
-                    Node * temp2 = new Node(currString.substr(0,j+1), false);
+                    Node * temp2 = new Node(currString.substr(0, j+1), false);
                     needsDeleted.push_back(temp2);
                     
                     prev->children[currString.at(0)-0] = temp2;
                     
                     temp2->children[currString.at(j+1)-0] = current;
                     
-                    temp2->children[key.at(j+1)-0] = temp;
+                    temp2->children[key.at(counter+1)-0] = temp;
                     current->str = currString.substr(j+1);
                     return;
                 }
                 //they are the same node
-                if(j == key.size() && j==currString.size() && !current->leaf){
+                else if((counter) == key.size() && j==currString.size() && !current->leaf){
                     current->value = value;
                     current->leaf = true;
                     return;
-                }
-                
-                else{
-                    key = key.substr(j);
-                    i+=j;
                 }
                 //this means that they split off without one ending completely!
             }
@@ -112,31 +106,32 @@ public:
                                             
     ValueType* search(std::string key) const{
         Node * curr = head;
-        int ogSize = key.size();
-        for(int i = 0; i < ogSize; i++){
+        int counter = 0;
+
+        for(int i = 0; i < key.size(); i++){
 //            std::cout << key << " key before checking nullptr" << std::endl;
 //            std::cout << "children index to examine " << (key.at(0) - 0) << std::endl;
-            if(curr->children[key.at(0)-0] != nullptr){
-                curr = curr->children[key.at(0)-0];
+            char c = key.at(counter);
+            int ind = c-0;
+            if(curr->children[ind] != nullptr){
+                curr = curr->children[ind];
                 std::string currString = curr->str;
                 int j;
-                if(key.size() < currString.size()){
+                if((key.size()-counter) < currString.size()){
                     return nullptr;
                 }
                 for(j = 0; j<currString.size(); j++){
-                    if(currString.at(j) != key.at(j)){
+                    if(currString.at(j) != key.at(j+counter)){
+//                        std::cout << "key char: " << key.at(j+counter) << std::endl;
                         return nullptr;
                     }
                 }
-                key = key.substr(j);
-                //this accounts for i having 1 added to it at the end.
-                i+=j-1;
+                counter+=j;
 
             }
-            if(key == "" && curr->leaf) return &curr->value;
-            count ++;
+            else return nullptr;
+            if(counter == (key.size()) && curr->leaf) return &curr->value;
         }
-
         return nullptr;
     }
 private:
