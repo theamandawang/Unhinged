@@ -26,6 +26,8 @@ bool MemberDatabase::LoadDatabase(std::string filename){
     std::string attribute;
     std::string trait;
     
+    int count = 0;
+    
     //need to remove count
     std::string email;
     while(std::getline(file, line)){
@@ -57,6 +59,7 @@ bool MemberDatabase::LoadDatabase(std::string filename){
             }
         m_people.push_back(p);
         m_keyEmail.insert(email, p);
+        count++;
     }
     file.close();
     return true;
