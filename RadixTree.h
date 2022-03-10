@@ -9,7 +9,7 @@
 
 
 
-//TODO: MUST REPLACE WITH ACTUAL RADIX TREE INSTEAD OF MAP
+//TODO: MUST REPLACE substr with some kind of string iteration.
 template<typename ValueType>
 class RadixTree{
 public:
@@ -129,10 +129,12 @@ public:
                     }
                 }
                 key = key.substr(j);
-//                std::cout << key << std::endl;
+                //this accounts for i having 1 added to it at the end.
+                i+=j-1;
 
             }
             if(key == "" && curr->leaf) return &curr->value;
+            count ++;
         }
 
         return nullptr;
