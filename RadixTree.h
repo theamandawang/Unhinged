@@ -6,7 +6,6 @@
 #include <iostream>
 #include "provided.h"
 
-//TODO: MUST REPLACE substr with some kind of string iteration.
 template<typename ValueType>
 class RadixTree{
 public:
@@ -15,6 +14,7 @@ public:
         needsDeleted.push_back(head);
     }
     ~RadixTree(){
+//        std::cout << needsDeleted.size() << std::endl;
         auto it = needsDeleted.begin();
         while(it != needsDeleted.end()){
             delete *it;
@@ -24,10 +24,7 @@ public:
     void insert(std::string key, const ValueType& value){
         Node * current = head;
         int counter = 0;
-        for(int i = 0; i < key.size(); i++){
-            //need to traverse what is in my tree so far
-            //this means that the value is already in the tree!
-            if(counter == key.size()) return;
+        while(counter < key.size()){
             char c = key.at(counter);
             int ind = c-0;
 //            std::cout << c << std::endl;
@@ -53,6 +50,7 @@ public:
                     }
                 }
                 counter += j;
+                
                 //all of key is contained in currString
                 if(counter == key.size() && j!=currString.size()){
                     Node * temp = new Node(key, true);
@@ -65,8 +63,8 @@ public:
                     temp->children[childInd] = current;
                     return;
                 }
-                //all of currString is contained in key
                 
+                //all of currString is contained in key
                 else if(j == currString.size() && currString.size() < key.size() && counter < key.size() &&  current->children[key.at(counter) - 0] == nullptr){
                     int childInd = key.at(counter) - 0;
                     Node * temp = new Node(key.substr(counter), true);
@@ -75,8 +73,10 @@ public:
                     current->children[childInd] = temp;
                     return;
                 }
+                
+                
+                
                 else if(j < currString.size()){
-//                    std::cout << "key: " << key << std::endl;
                     Node * temp = new Node(key.substr(counter+1), true);
                     temp->value = value;
                     needsDeleted.push_back(temp);
@@ -93,7 +93,7 @@ public:
                     return;
                 }
                 //they are the same node
-                else if((counter) == key.size() && j==currString.size() && !current->leaf){
+                else if((counter) == key.size() && !current->leaf){
                     current->value = value;
                     current->leaf = true;
                     return;
@@ -108,7 +108,7 @@ public:
         Node * curr = head;
         int counter = 0;
 
-        for(int i = 0; i < key.size(); i++){
+        while(counter < key.size()){
 //            std::cout << key << " key before checking nullptr" << std::endl;
 //            std::cout << "children index to examine " << (key.at(0) - 0) << std::endl;
             char c = key.at(counter);
@@ -134,6 +134,11 @@ public:
         }
         return nullptr;
     }
+//    void dump() {
+//        print("", head);
+//    }
+    
+    
 private:
     
     struct Node {
@@ -146,6 +151,26 @@ private:
         ValueType value;
         bool leaf;
         Node * children[128]={nullptr};
+        
+        
+        void print(std::string output, Node * p) {
+                for (int i = 0; i < 128; i++) {
+                    if (p->children[i] != nullptr) {
+                        Node* child = p->children[i];
+                        std::string newOutput = output;
+                        newOutput += (i + 'a');
+                        newOutput += child->str;
+                        std::cerr << "============================" << std::endl;
+                        std::cerr << "Parent: " << """ << output << """ << std::endl;
+                        std::cerr << "Child: " << """ << newOutput << """ << std::endl;
+                        if (child->leaf)
+                            std::cerr << "This is a complete word and its value corresponds to: " << child->str << std::endl;
+                        std::cerr << std::endl;
+
+                        print(newOutput, p->children[i]);
+                    }
+                }
+            }
     };
     Node * head;
     std::vector<Node *> needsDeleted;
