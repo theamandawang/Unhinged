@@ -1,0 +1,48 @@
+You must submit a brief (You're welcome!) report that details what parts of the project:
+● you were unable to finish
+● use banned STL components (since you didn’t have time to finish an implementation
+that doesn't use them)
+● have bugs that you have not yet been able to find/fix
+The report must also document how you tested your various classes. Either a paragraph about how you tested each method or a list of test cases is fine. For example, you might provide a list of items like this: “I inserted car then carey, then searched to make sure both were found in the Radix Tree.”
+
+
+I finished the whole project and did not end up using any banned STL components. I don't believe I have any bugs in my code, but running the project ends up using 2.04 GB of RAM on my machine, so there might be an issue with having too much data allocated; I'm not really sure. However, I checked the values held in the radix trees at breakpoints, and the tree is implemented correctly.
+
+TESTING:
+
+MemberDatabase:
+I tested MemberDatabase by just loading in the members. I also set a breakpoint and checked the RadixTree to make sure emails were being added correctly.
+
+AttributeTranslator:
+I tested AttributeTranslator by loading in the translator file, and then checking to see each Attribute-Value pair made it into the RadixTree by setting a breakpoint and checking values.
+
+PersonProfile:
+I used MemberDatabase to test PersonProfile. I created each PersonProfile, that MemberDatabase would create. Then, I printed them out individually just to check that they were added into the RadixTree correctly.
+
+MatchMaker:
+I tested the output of my MatchMaker against the sample on SEASnet.
+
+
+RadixTree:
+I tested the RadixTree by figuring out the three basic cases for what happens upon insertion:
+Case 1:
+    Adding a word that extends from a word that already exists.
+    Eg. insert bob, then bobby
+    Eg. insert burn, then burning
+    Eg. insert blab, then blablah
+
+Case 2:
+    Adding a word that is shorter than a word that already exists (but everything else is in common)
+    Eg. insert bobby, then bob
+    Eg. insert burning, then burn
+    Eg. insert singer, then sing
+    
+Case 3:
+    Adding a word that differs at some point from a word that already exists (but still has a few letters in common)
+    Eg. insert baby, then babushka
+    Eg. insert boxing, then boxer
+    Eg. insert jamie, then jordan
+    Eg. insert short, then shell
+
+Then, for searching I just tested if the values I inserted were already in the tree.
+
