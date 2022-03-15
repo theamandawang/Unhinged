@@ -12,13 +12,6 @@
 const std::string MEMBERS_FILE    = "/Users/amanda/Documents/CS32/CS32-Project4/CS32-Project4/Unhinged/members.txt"; // "members.txt";
 const std::string TRANSLATOR_FILE = "/Users/amanda/Documents/CS32/CS32-Project4/CS32-Project4/Unhinged/translator.txt"; //"translator.txt";
 bool findMatches(const MemberDatabase& mdb, const AttributeTranslator& at);
-#include <sys/stat.h>
-bool is_directory(std::string path)
-{
-    struct stat statbuf;
-    return stat(path.c_str(), &statbuf) == 0  &&  S_ISDIR(statbuf.st_mode);
-}
-
 int main() {
     MemberDatabase mdb;
     if (!mdb.LoadDatabase(MEMBERS_FILE))

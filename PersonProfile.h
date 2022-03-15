@@ -25,7 +25,7 @@ private:
     std::string m_name;
     std::string m_email;
     std::vector<AttValPair> m_attValPairs;
-    RadixTree<std::string> m_container;
+    RadixTree<bool> m_container;
     
 };
 

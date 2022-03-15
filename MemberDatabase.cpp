@@ -18,6 +18,8 @@ MemberDatabase::~MemberDatabase(){
         it = m_people.erase(it);
     }
 }
+
+//O(M) time because we must go through each line of the database
 bool MemberDatabase::LoadDatabase(std::string filename){
     std::string line;
     std::ifstream file(filename);
@@ -61,6 +63,7 @@ bool MemberDatabase::LoadDatabase(std::string filename){
     return true;
 }
 
+//O(1) time because we use radix tree and the length of attribute +',' + value is roughly constant
 std::vector<std::string> MemberDatabase::FindMatchingMembers(const AttValPair& input) const{
     std::vector<std::string> * p = m_keyAttVal.search(input.attribute +','+ input.value);
     std::vector<std::string> empty;
@@ -68,7 +71,7 @@ std::vector<std::string> MemberDatabase::FindMatchingMembers(const AttValPair& i
     return *p;
 }
 
-//log n time because using a radix tree
+//O(1) time because we are using a radix tree; depends on length of email which is roughly constant
 const PersonProfile* MemberDatabase::GetMemberByEmail(std::string email) const{
     PersonProfile ** p = m_keyEmail.search(email);
     if(p == nullptr) return nullptr;

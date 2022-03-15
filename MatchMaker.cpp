@@ -4,17 +4,16 @@
 //
 //  Created by Amanda Wang on 3/2/22.
 //
-
-
 #include "MatchMaker.h"
 #include <iostream>
 #include <algorithm>
+#include <unordered_map>
+#include <unordered_set>
 MatchMaker::MatchMaker(const MemberDatabase& mdb, const AttributeTranslator& at): m_data(&mdb), m_at(&at){}
 
 MatchMaker::~MatchMaker(){}
-std::vector<EmailCount> MatchMaker::IdentifyRankedMatches(std::string email, int threshold) const{
-    auto start = std::chrono::steady_clock::now();
-    
+
+std::vector<EmailCount> MatchMaker::IdentifyRankedMatches(std::string email, int threshold) const{    
     const PersonProfile * p = m_data->GetMemberByEmail(email);
     std::vector<EmailCount> v;
     if(p == nullptr) return v;
@@ -63,10 +62,6 @@ std::vector<EmailCount> MatchMaker::IdentifyRankedMatches(std::string email, int
         }
     }
     std::sort(v.begin(), v.end(), byEmail);
-    
-    /* code you want to measure */
-    std::cout << "Elapsed(ms)=" << since(start).count() << std::endl;
-
     
     return v;
 }

@@ -11,7 +11,6 @@ public:
     ~AttributeTranslator();
     bool Load(std::string filename);
     std::vector<AttValPair> FindCompatibleAttValPairs(const AttValPair& source) const;
-    
 
 private:
     RadixTree<std::vector<AttValPair>> m_tree;

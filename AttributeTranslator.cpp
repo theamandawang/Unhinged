@@ -40,7 +40,6 @@ bool AttributeTranslator::Load(std::string filename){
                 compAtt = "";
                 compVal = "";
             }
-            count = count%4;
             if(count %4 == 0){
                 att = line2;
             }
@@ -59,6 +58,8 @@ bool AttributeTranslator::Load(std::string filename){
     file.close();
     return true;
 }
+
+//O(1) time because we use radix tree and the length of attribute +',' + value is roughly constant
 std::vector<AttValPair> AttributeTranslator::FindCompatibleAttValPairs(const AttValPair &source) const{
     std::vector<AttValPair> empty;
     std::vector<AttValPair> * v = m_tree.search(source.attribute + ',' + source.value);
