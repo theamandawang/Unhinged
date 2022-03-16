@@ -22,7 +22,9 @@ MemberDatabase::~MemberDatabase(){
 //O(M) time because we must go through each line of the database
 bool MemberDatabase::LoadDatabase(std::string filename){
     std::string line;
-    std::ifstream file(filename);
+    std::ifstream file;
+    file.open(filename);
+    if(!file) return false;
     int attvalPairs = 0;
     std::string name;
     std::string attribute;

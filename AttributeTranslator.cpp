@@ -14,7 +14,9 @@ AttributeTranslator::~AttributeTranslator(){}
 
 bool AttributeTranslator::Load(std::string filename){
     std::string line;
-    std::ifstream file(filename);
+    std::ifstream file;
+    file.open(filename);
+    if(!file) return false;
     long count = 0;
     std::string att;
     std::string val;
